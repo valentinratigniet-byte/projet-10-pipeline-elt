@@ -37,3 +37,12 @@ models:
           - relationships:
               to: ref('dim_date')
               field: date_key
+      - name: status
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['pending', 'paid', 'shipped', 'delivered', 'cancelled']
+      - name: quantity
+        tests: [not_null]
+      - name: line_amount
+        tests: [not_null]
