@@ -31,9 +31,11 @@ Détail et diagramme : **[docs/pipeline.md](docs/pipeline.md)**.
 
 ## 🚀 Rejouer le pipeline
 
-Prérequis : la base du **Projet 07** lancée (Docker, port 5433) + Python.
+Prérequis : la base du **Projet 07** lancée (Docker, port 5433) + **Python ≥ 3.11**
+(environnement virtuel recommandé).
 
 ```bash
+python -m venv .venv && .venv/Scripts/activate    # Windows (Linux/macOS : source .venv/bin/activate)
 pip install -r requirements.txt
 
 # 1. (optionnel) simuler des ventes fraîches dans la source
@@ -56,21 +58,25 @@ python -m dbt.cli.main test                       # tests de qualité
 **Voir l'incrément fonctionner** : relancer l'étape 1 puis l'étape 2 → seules les
 nouvelles commandes traversent le pipeline (le log affiche `+N commandes`).
 
-## ✅ Validation (exécutée sur la base réelle)
+## ✅ Validation (pipeline exécuté en vrai)
 
-- **EL incrémental** : 1er passage → 40 000 commandes / 120 089 lignes en `raw`.
-  Après +300 nouvelles ventes, le passage suivant ne charge **que** +300 / +928
-  (watermark = 40000) — pas de rechargement complet.
-- **Marts** : `fct_sales` = 120 089 lignes, CA total **73 062 444,34 €** (identique
-  à la source → transformations correctes).
-- **Incrémental sans doublon** : `fct_sales` 120 089 → 121 017 (= +928) ; un 2ᵉ
-  passage ajoute **0** ligne (idempotent).
+Flow Prefect complet exécuté de bout en bout (`python elt/flow.py`) :
 
-> **Note d'exécution locale** : la CLI `dbt` n'a pas pu être lancée sur cette
-> machine (Python **3.9.0**, dont un bug d'API C empêche le chargement de
-> `dbt_extractor` ; corrigé en 3.9.1+). Les modèles dbt sont l'implémentation
-> canonique et tournent sur tout Python ≥ 3.9.1 ; la **logique** (staging → marts +
-> incrément) a été validée en exécutant le SQL équivalent contre la base.
+```
+✅ extract_load  → EL OK (watermark, charge uniquement le nouveau)
+✅ dbt run       → 4 vues staging + 3 dimensions + fct_sales · PASS=8
+✅ dbt test      → 24 tests de qualité · PASS=24  ERROR=0
+   Flow 'elt-ecommerce' — Completed
+```
+
+- **Modèle en étoile** : `fct_sales` 121 017 lignes, `dim_customer` 5 000,
+  `dim_product` 2 000, `dim_date` 733 — construits par dbt.
+- **Tests dbt** (24) : unicité des clés, `not_null`, intégrité référentielle → tous verts.
+- **Incrémental via dbt** : après +100 ventes, `dbt run` affiche
+  `incremental model marts.fct_sales … INSERT 0 314` et la table passe de
+  121 017 à **121 331** (= +314) — dbt **ajoute** seulement le nouveau, sans rebuild.
+
+> Testé avec dbt-core 1.12 (dbt-postgres) sur Python 3.12 dans un venv.
 
 ## 🔌 Brancher Power BI
 
