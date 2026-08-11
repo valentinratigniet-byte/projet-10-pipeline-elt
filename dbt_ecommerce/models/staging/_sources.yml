@@ -1,0 +1,14 @@
+version: 2
+
+sources:
+  - name: raw
+    schema: raw
+    description: >
+      Copie brute des tables opérationnelles, chargée par le script Python
+      d'extraction/chargement (elt/extract_load.py). On ne transforme jamais ici.
+    tables:
+      - name: customer
+      - name: category
+      - name: product
+      - name: orders
+      - name: order_item

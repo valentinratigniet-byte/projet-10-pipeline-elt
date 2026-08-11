@@ -1,0 +1,14 @@
+# Profil dbt local. Chargé via DBT_PROFILES_DIR pointant sur ce dossier.
+# Pas de secret réel ici (base de démo Docker) ; en prod -> variables d'environnement.
+ecommerce_elt:
+  target: dev
+  outputs:
+    dev:
+      type: postgres
+      host: 127.0.0.1
+      port: 5433
+      user: portfolio
+      password: portfolio
+      dbname: ecommerce
+      schema: analytics
+      threads: 4

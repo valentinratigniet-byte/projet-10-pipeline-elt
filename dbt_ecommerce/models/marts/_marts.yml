@@ -1,0 +1,39 @@
+version: 2
+
+models:
+  - name: dim_customer
+    description: "Dimension client (source : stg_customers)."
+    columns:
+      - name: customer_key
+        tests: [unique, not_null]
+  - name: dim_product
+    description: "Dimension produit, catégorie dénormalisée."
+    columns:
+      - name: product_key
+        tests: [unique, not_null]
+  - name: dim_date
+    description: "Table calendrier continue (une ligne par jour)."
+    columns:
+      - name: date_key
+        tests: [unique, not_null]
+  - name: fct_sales
+    description: "Table de faits incrémentale (grain : ligne de commande)."
+    columns:
+      - name: order_id
+        tests: [not_null]
+      - name: product_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_product')
+              field: product_key
+      - name: customer_key
+        tests:
+          - relationships:
+              to: ref('dim_customer')
+              field: customer_key
+      - name: date_key
+        tests:
+          - relationships:
+              to: ref('dim_date')
+              field: date_key
