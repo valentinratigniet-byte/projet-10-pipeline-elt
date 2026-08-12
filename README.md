@@ -65,13 +65,13 @@ Flow Prefect complet exécuté de bout en bout (`python elt/flow.py`) :
 ```
 ✅ extract_load  → EL OK (watermark, charge uniquement le nouveau)
 ✅ dbt run       → 4 vues staging + 3 dimensions + fct_sales · PASS=8
-✅ dbt test      → 24 tests de qualité · PASS=24  ERROR=0
+✅ dbt test      → 28 tests de qualité · PASS=28  ERROR=0
    Flow 'elt-ecommerce' — Completed
 ```
 
 - **Modèle en étoile** : `fct_sales` 121 017 lignes, `dim_customer` 5 000,
   `dim_product` 2 000, `dim_date` 733 — construits par dbt.
-- **Tests dbt** (24) : unicité des clés, `not_null`, intégrité référentielle → tous verts.
+- **Tests dbt** (28) : unicité des clés, `not_null`, intégrité référentielle, valeurs autorisées (statut) → tous verts.
 - **Incrémental via dbt** : après +100 ventes, `dbt run` affiche
   `incremental model marts.fct_sales … INSERT 0 314` et la table passe de
   121 017 à **121 331** (= +314) — dbt **ajoute** seulement le nouveau, sans rebuild.
