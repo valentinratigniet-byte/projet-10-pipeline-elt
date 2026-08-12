@@ -16,3 +16,6 @@ logs/
 # Secrets
 .env
 *.json.key
+
+# dbt local user file
+dbt_ecommerce/.user.yml
