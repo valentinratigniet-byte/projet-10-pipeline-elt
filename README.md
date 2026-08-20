@@ -8,12 +8,21 @@
 
 ## 🧱 Architecture (ELT medallion)
 
-```
-public (OLTP)  ──EL incrémental──▶  raw  ──dbt──▶  staging  ──dbt──▶  marts  ──▶  Power BI
-   source                          brut          vues stg_*        étoile fct_/dim_
+```mermaid
+flowchart LR
+    SRC[("public (OLTP)<br/>source qui évolue")] -->|EL incrémental<br/>watermark| RAW[("raw<br/>copie brute")]
+    RAW -->|dbt| STG["staging<br/>vues stg_*"]
+    STG -->|dbt| MARTS["marts<br/>étoile fct_/dim_*"]
+    MARTS --> BI["Power BI<br/>Projet 09"]
+    PREFECT["Prefect<br/>orchestration, retries"] -.-> RAW
+    PREFECT -.-> STG
+    PREFECT -.-> MARTS
+
+    style MARTS fill:#137A8B,color:#fff
+    style SRC fill:#E4A93C,color:#1a1a1a
 ```
 
-Détail et diagramme : **[docs/pipeline.md](docs/pipeline.md)**.
+Détail et diagramme complémentaire : **[docs/pipeline.md](docs/pipeline.md)**.
 
 | Couche | Rôle | Écrit par |
 |---|---|---|
