@@ -1,5 +1,7 @@
 # Projet 10 — Pipeline ELT automatisé PostgreSQL → Power BI
 
+[![CI](https://github.com/valentinratigniet-byte/projet-10-pipeline-elt/actions/workflows/ci.yml/badge.svg)](https://github.com/valentinratigniet-byte/projet-10-pipeline-elt/actions/workflows/ci.yml)
+
 > **Un dashboard n'a de valeur que si ses données sont fraîches, sans intervention
 > manuelle.** Ce pipeline ingère une source qui évolue, la transforme en modèle en
 > étoile avec **dbt**, en **chargement incrémental**, orchestré par **Prefect** et
