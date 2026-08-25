@@ -117,5 +117,5 @@ projet-10-pipeline-elt/
 
 ---
 
-*Projet 10 du [Portfolio Data](../). Industrialise la chaîne 07→09. Brique suivante :
+*Projet 10 du [Portfolio Data](https://github.com/valentinratigniet-byte). Industrialise la chaîne 07→09. Brique suivante :
 Projet 11 — gouvernance & qualité (dictionnaire + lignage de l'entrepôt).*
