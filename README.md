@@ -12,9 +12,9 @@
 
 ```mermaid
 flowchart LR
-    SRC[("public (OLTP)<br/>source qui évolue")] -->|EL incrémental<br/>watermark| RAW[("raw<br/>copie brute")]
-    RAW -->|dbt| STG["staging<br/>vues stg_*"]
-    STG -->|dbt| MARTS["marts<br/>étoile fct_/dim_*"]
+    SRC[("public (OLTP)<br/>source qui évolue")] -- "EL incrémental<br/>watermark" --> RAW[("raw<br/>copie brute")]
+    RAW -- "dbt" --> STG["staging<br/>vues stg_*"]
+    STG -- "dbt" --> MARTS["marts<br/>étoile fct_/dim_*"]
     MARTS --> BI["Power BI<br/>Projet 09"]
     PREFECT["Prefect<br/>orchestration, retries"] -.-> RAW
     PREFECT -.-> STG
